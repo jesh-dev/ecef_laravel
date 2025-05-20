@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Testing\Constraints\SoftDeletedInDatabase;
 
 return new class extends Migration
 {
@@ -17,11 +18,12 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('email')->unique();
             $table->string('phone_number', 15);
-            $table->enum('province', ['mainland', 'mainland1', 'mainland2', 'lagos', 'lagos_mainland'])->unique();
+            $table->enum('province', ['mainland', 'lagos', 'lagos_mainland_1'])->unique();
+            $table->enum('branch', ['branch_1', 'branch_2', 'branch_3']);
+            $table->enum('role', ['user', 'admin'])->default('user')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('verification_code')->nullable();
             $table->string('password');
-            $table->enum('gender', ['male', 'female']);
-            $table->enum('role', ['user', 'admin'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

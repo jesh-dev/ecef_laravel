@@ -10,4 +10,5 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [memberController::class, 'register']);
 Route::post('/login', [memberController::class, 'login']);
+Route::post('/verify', [memberController::class, 'verify']);
 

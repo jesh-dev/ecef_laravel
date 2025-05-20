@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class memberController extends Controller
@@ -17,10 +18,9 @@ class memberController extends Controller
             'firstname' => 'required|string',
             'lastname' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'phone_number' => 'required|string',
-            'province' => 'in:mainland,mainland1,mainland2,lagos,lagos_mainland',
-            'gender' => 'in:male,female',
-            'role' => 'in:user,admin',
+            'phone_number' => 'required|string|min:8|max:15|regex:/^(?=.*[0-9])[0-9]{8,}$/',
+            'province' => 'required|in:mainland,lagos,lagos_mainland_1',
+            'branch' => 'required|in:branch_1,branch_2,branch_3',
             'password' => 'string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[a-zA-Z0-9]{8,}$/',
         ]);
 
@@ -31,25 +31,84 @@ class memberController extends Controller
             ], 400);
         }
 
-        $user = new User;
-        $user->firstname = $request->firstname;
-        $user->lastname = $request->lastname;
-        $user->email = $request->email;
-        $user->phone_number = $request->phone_number;
-        $user->province = $request->province;
-        $user->gender = $request->gender;
-        $user->role = $request->role;
-        $user->password = $request->password;
-        $user->save();
-        return response()->json([
-            'user' => $user,
-            'message' => 'Registered Successfully'
-        ], 201);
+        try {
+            //code...
+            $verification_code = rand(100000,999999);
+            $user = new User;
+            $user->firstname = $request->firstname;
+            $user->lastname = $request->lastname;
+            $user->email = $request->email;
+            $user->phone_number = $request->phone_number;
+            $user->province = $request->province;
+            $user->branch = $request->branch;
+            // $user->role = $request->role;
+            $user->password = $request->password;
+            $user->verification_code = $verification_code;
+            $user->save();
+
+            Mail::to($user->email)->send(new \App\Mail\UserEmailVerification($user));
+            return response()->json([
+                'user' => $user,
+                'message' => 'Registered Successfully'
+            ], 201);
+            
+        } catch (\Exception $error) {
+            return response()->json([
+                'message' => 'Registration Failed',
+                'error' => $error
+            ], 500);
+        }
+        
+    }
+
+        public function verify(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'code' => 'required|numeric',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 400);
+        }
+        try {
+            $user = User::where('email', $request->email)->first();
+            if (!$user) {
+                return response()->json([
+                    'message' => $request->email . 'do not exist',
+                ], 400);
+            } elseif ($user->verification_code !== $request->code) {
+                return response()->json([
+                    'message' => 'verification failed',
+                ], 400);
+            } elseif (
+                $user->email && $user->email ===
+                $request->email
+            ) {
+                User::where('email', $request->email)->update([
+                    'email_verified_at' => now(),
+                    'verification_code' => null,
+                ]);
+                $user->save();
+
+                return response()->json([
+                    'message' => "Verified successfully",
+                ], 200);
+            }
+        } catch (\Exception $error) {
+            return response()->json([
+                'message' => "Verification Failed",
+                'errors' => $error,
+            ], 500);
+        }
     }
 
         
     // Login 
     public function login(Request $request) {
+        
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:8'
@@ -57,10 +116,12 @@ class memberController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $token = $user->createToken('login-token')->plainTextToken;
 
             return response()->json([
                 'message' => 'login successfully',
-                'user' => $user
+                'user' => $user,
+                'token' => $token,
             ], 200);
         }
 
