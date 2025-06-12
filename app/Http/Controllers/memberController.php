@@ -28,7 +28,7 @@ class memberController extends Controller
             return response()->json([
                 'errors' => $validator->errors(),
                 'message' => "registration Failed"
-            ], 400);
+            ], 500);
         }
 
         try {
@@ -41,7 +41,6 @@ class memberController extends Controller
             $user->phone_number = $request->phone_number;
             $user->province = $request->province;
             $user->branch = $request->branch;
-            // $user->role = $request->role;
             $user->password = $request->password;
             $user->verification_code = $verification_code;
             $user->save();
@@ -56,7 +55,7 @@ class memberController extends Controller
             return response()->json([
                 'message' => 'Registration Failed',
                 'error' => $error
-            ], 500);
+            ], 400);
         }
         
     }
@@ -95,7 +94,7 @@ class memberController extends Controller
 
                 return response()->json([
                     'message' => "Verified successfully",
-                ], 200);
+                ], 201);
             }
         } catch (\Exception $error) {
             return response()->json([
@@ -119,6 +118,7 @@ class memberController extends Controller
             $token = $user->createToken('login-token')->plainTextToken;
 
             return response()->json([
+                'success' => true,
                 'message' => 'login successfully',
                 'user' => $user,
                 'token' => $token,
@@ -126,6 +126,7 @@ class memberController extends Controller
         }
 
         return response()->json([
+            'success' => false,
             'message' => 'Invalid Credentials',
         ], 400);
     }

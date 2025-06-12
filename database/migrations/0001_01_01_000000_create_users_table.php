@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone_number', 15);
             $table->enum('province', ['mainland', 'lagos', 'lagos_mainland_1'])->unique();
             $table->enum('branch', ['branch_1', 'branch_2', 'branch_3']);
-            $table->enum('role', ['user', 'admin'])->default('user')->nullable();
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('verification_code')->nullable();
             $table->string('password');
