@@ -120,7 +120,7 @@ class memberController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'login successfully',
+                'message' => 'login successfully!!',
                 'user' => $user,
                 'token' => $token,
             ], 200);

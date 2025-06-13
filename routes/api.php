@@ -9,8 +9,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::post('/register', [memberController::class, 'register']);
-Route::post('/login', [memberController::class, 'login']);
-// ->middleware('guest', 'throttle:5,1', 'auth:sanctum'); // 5 attempts per minute
+Route::post('/login', [memberController::class, 'login'])->middleware('guest', 'throttle:5,1'); // 5 attempts per minute
 Route::post('/verify', [memberController::class, 'verify']);
 
 
