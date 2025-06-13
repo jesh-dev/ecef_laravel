@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ContactMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -115,7 +116,7 @@ class memberController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('login-token')->plainTextToken;
+            $token = $user->createToken('auth-token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
@@ -130,4 +131,35 @@ class memberController extends Controller
             'message' => 'Invalid Credentials',
         ], 400);
     }
+
+    //    public function index()
+    //     {
+    //         return view('contact');
+    //     }
+
+      public function sendMail(Request $request)
+{
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'subject' => 'required',
+        'message' => 'required',
+    ]);
+
+    $data = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'subject' => $request->subject,
+        'user_message' => $request->message,
+    ];
+
+    try {
+        Mail::to('jeshrunlaw@gmail.com')->send(new ContactMail($data));
+        return response()->json(['message' => 'Email sent successfully'], 200);
+    } catch (\Exception $e) {
+        // \Log::error('Contact mail failed: ' . $e->getMessage());
+        return response()->json(['error' => 'Email sending failed.'], 500);
+    }
+}
+
 }

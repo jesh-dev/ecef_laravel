@@ -10,5 +10,10 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/register', [memberController::class, 'register']);
 Route::post('/login', [memberController::class, 'login']);
+// ->middleware('guest', 'throttle:5,1', 'auth:sanctum'); // 5 attempts per minute
 Route::post('/verify', [memberController::class, 'verify']);
+
+
+Route::post('/contact', [memberController::class, 'sendMail']);
+// Route::post('/contact', [memberController::class, 'index'])->name('contact');
 
