@@ -29,7 +29,7 @@ class memberController extends Controller
             return response()->json([
                 'errors' => $validator->errors(),
                 'message' => "registration Failed"
-            ], 500);
+            ], 422);
         }
 
         try {
@@ -48,12 +48,14 @@ class memberController extends Controller
 
             Mail::to($user->email)->send(new \App\Mail\UserEmailVerification($user));
             return response()->json([
+                'success' => true,
                 'user' => $user,
                 'message' => 'Registered Successfully'
-            ], 201);
+            ], 200);
             
         } catch (\Exception $error) {
             return response()->json([
+                "success" => false,
                 'message' => 'Registration Failed',
                 'error' => $error
             ], 400);

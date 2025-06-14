@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('email')->unique();
             $table->string('phone_number', 15);
-            $table->enum('province', ['mainland', 'lagos', 'lagos_mainland_1'])->unique();
+            $table->enum('province', ['mainland', 'lagos', 'lagos_mainland_1']);
             $table->enum('branch', ['branch_1', 'branch_2', 'branch_3']);
             $table->enum('role', ['user', 'admin'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
