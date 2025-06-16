@@ -118,7 +118,7 @@ class memberController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = $user->createToken('auth-token')->plainTextToken;
+            $token = $user->createToken('login-token')->plainTextToken;
 
             return response()->json([
                 'success' => true,
