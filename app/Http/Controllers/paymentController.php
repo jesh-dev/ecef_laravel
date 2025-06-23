@@ -13,10 +13,10 @@ class paymentController extends Controller
     public function payment(Request $request) {
 
         $validator = Validator::make($request->all(),[
-            'fullname' => 'string',
+            // 'fullname' => 'string',
             'email' => 'email',
             'amount' => 'numeric',
-            'pledge_amount' => 'numeric'
+            // 'pledge_amount' => 'numeric'
 
         ]);
 
@@ -29,7 +29,7 @@ class paymentController extends Controller
 
         try {
             $payment = new Payment;
-            $payment->fullname = $request->fullname;
+            // $payment->fullname = $request->fullname;
             $payment->email = $request->email;
             $payment->amount = $request->amount;
             $payment->pledge_amount = $request->pledge_amount;
