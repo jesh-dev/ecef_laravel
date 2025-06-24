@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payments', function (Blueprint $table) {
+        Schema::create('paymenthistories', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique;
-            $table->decimal('amount');
-            $table->decimal('pledge_amount');
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payments');
+        Schema::dropIfExists('paymenthistories');
     }
 };

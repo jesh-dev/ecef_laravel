@@ -14,9 +14,9 @@ class paymentController extends Controller
 
         $validator = Validator::make($request->all(),[
             // 'fullname' => 'string',
-            'email' => 'email',
+            'email' => 'email|required',
             'amount' => 'numeric',
-            // 'pledge_amount' => 'numeric'
+            'pledge_amount' => 'numeric'
 
         ]);
 
