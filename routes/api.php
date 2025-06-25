@@ -11,6 +11,13 @@ Route::get('/user', function (Request $request) {
 })
 ->middleware('auth:sanctum',);
 
+// Route::middleware(['auth:sanctum'])->get('/admin/total-users', function () {
+//     return response()->json([
+//         'count' => \App\Models\User::count()
+//     ]);
+// });
+
+
 Route::post('/register', [memberController::class, 'register']);
 Route::post('/login', [memberController::class, 'login'])
 ->middleware('guest', 'throttle:5,1'); // 5 attempts per minute
