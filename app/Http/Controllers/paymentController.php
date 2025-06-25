@@ -4,21 +4,55 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 
 class paymentController extends Controller
 {
     //
-    public function payment(Request $request) {
+
+    /*
+    *Getting all payment for authenticated user with the name index.
+    */
+    public function index()
+    {
+        return auth()->user()
+                     ->payments()
+                     ->with('paymentHistory')
+                     ->latest()
+                     ->get();
+    }
+
+    /*
+    *  Getting all payment with their history with the name show.
+    */
+
+    public function show($id)
+    {
+        $payment = \App\Models\Payment::with('paymentHistory')
+        ->where('id', $id)
+        ->where('user_id', auth()->id())
+        ->firstOrFail();
+
+        return response()->json($payment);
+    }
+
+    /**
+     * Creating new payment with the name store...
+     */
+    public function store(Request $request) {
 
         $validator = Validator::make($request->all(),[
-            // 'fullname' => 'string',
             'email' => 'email|required',
-            'amount' => 'numeric',
+            'amount' => 'required|numeric|min:0',
             'pledge_amount' => 'numeric'
 
         ]);
+
+        // $payment = auth()->user()->payments()->create([
+
+        // ])
 
         if ($validator->fails()) {
             return response()->json([
@@ -34,11 +68,11 @@ class paymentController extends Controller
             $payment->amount = $request->amount;
             $payment->pledge_amount = $request->pledge_amount;
             $payment->save();
-
+            // Mail::to($user->email)->send(new \App\Mail\UserEmailVerification($user));
             return response()->json([
                 'payment' => $payment,
-                'message' => 'Payment done , thanks for your help',
-            ], 200);
+                'message' => 'Paid successfully',
+            ], 201);
 
         } catch (\Exception $error) {
             return response()->json([

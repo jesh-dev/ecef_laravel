@@ -19,12 +19,12 @@ Route::get('/user', function (Request $request) {
 
 
 Route::post('/register', [memberController::class, 'register']);
-Route::post('/login', [memberController::class, 'login'])
-->middleware('guest', 'throttle:5,1'); // 5 attempts per minute
+Route::post('/login', [memberController::class, 'login'])->middleware('guest', 'throttle:5,1'); // 5 attempts per minute
 Route::post('/verify', [memberController::class, 'verify']);
-
-Route::post('/payment', [paymentController::class, 'payment']);
-
 Route::post('/contact', [memberController::class, 'sendMail']);
-// Route::post('/contact', [memberController::class, 'index'])->name('contact');
 
+route::middleware('auth:sanctum')->group(function () {
+    Route::post('/payments', [paymentController::class, 'store']);
+    Route::get('/payments', [paymentController::class, 'index']);
+    Route::get('/payments{id}', [paymentController::class, 'show']);
+});
