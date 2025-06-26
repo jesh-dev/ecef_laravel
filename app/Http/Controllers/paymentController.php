@@ -62,10 +62,11 @@ class paymentController extends Controller
         try {
             $payment = new Payment;
             $payment->user_id = auth()->id();
-            $payment->email = $request->email;
+            $payment->email = auth()->email();
             $payment->amount = $request->amount;
             $payment->pledge_amount = $request->pledge_amount;
             $payment->save();
+            // will soon add email notification whenever a user makes payment
             // Mail::to($user->email)->send(new \App\Mail\UserEmailVerification($user));
             return response()->json([
                 'payment' => $payment,
