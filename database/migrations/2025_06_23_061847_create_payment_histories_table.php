@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_histories', function (Blueprint $table) {
+       Schema::create('payment_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payment_id')->constrained('payments')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('owner_by')->nullable()->constrained('users', 'id')->nullOnDelete('cascade');
+            $table->foreignId('owner_by')->nullable()->constrained('users', 'id')->nullOnDelete();
             $table->string('email')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
             $table->decimal('pledge_amount', 10, 2)->nullable();
@@ -22,8 +22,7 @@ return new class extends Migration
             $table->text('notes')->nullable();
             $table->json('snapshot')->nullable();
 
-            $table->index('payment_id');
-            $table->index('change_type');
+            // $table->index('payment_id');
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('paymenthistories');
+        Schema::dropIfExists('payment_histories');
     }
 };

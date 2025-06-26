@@ -50,9 +50,7 @@ class paymentController extends Controller
 
         ]);
 
-        // $payment = auth()->user()->payments()->create([
 
-        // ])
 
         if ($validator->fails()) {
             return response()->json([
@@ -63,7 +61,7 @@ class paymentController extends Controller
 
         try {
             $payment = new Payment;
-            // $payment->fullname = $request->fullname;
+            $payment->user_id = auth()->id();
             $payment->email = $request->email;
             $payment->amount = $request->amount;
             $payment->pledge_amount = $request->pledge_amount;

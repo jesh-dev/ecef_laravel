@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\memberController;
 use App\Http\Controllers\paymentController;
+use App\Http\Controllers\PaymentHistoryController;
 use App\Models\payment;
+use App\Models\paymenthistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +29,7 @@ route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments', [paymentController::class, 'store']);
     Route::get('/payments', [paymentController::class, 'index']);
     Route::get('/payments{id}', [paymentController::class, 'show']);
+    // routes/api.php
+    
 });
+Route::middleware('auth:sanctum')->get('/payment/history', [PaymentHistoryController::class, 'history']);

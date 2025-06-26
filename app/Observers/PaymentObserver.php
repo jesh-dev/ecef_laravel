@@ -14,14 +14,23 @@ class PaymentObserver
     public function created(Payment $payment): void
     {
         //
-        paymenthistory::create([
+        // paymenthistory::create([
+        //     'payment_id' => $payment->id,
+        //     'owner_by' => Auth::id(''), 
+        //     'owner_type' => 'created',
+        //     'amount' => $payment->amount,
+        //     'email' => $payment->email,
+        //     'note' => 'payment created',
+        //     'snapshot' => $payment->toArray(),
+        // ]);
+         PaymentHistory::create([
             'payment_id' => $payment->id,
-            'owner_by' => Auth::id(''), 
-            'owner_type' => 'created',
-            'amount' => $payment->amount,
+            'owner_by' => Auth::id(''),
             'email' => $payment->email,
-            'note' => 'Payment created',
-            'snapshot' => $payment->toArray(),
+            'amount' => $payment->amount,
+            'pledge_amount' => $payment->pledge_amount,
+            'notes' => 'Payment created',
+            'snapshot' => json_encode($payment->toArray()),
         ]);
 
     }
@@ -37,8 +46,9 @@ class PaymentObserver
                 'payment_id'   => $payment->id,
                 'owner_by'   => Auth::id(),
                 'owner_type'  => 'updated',
+                'new_status'   => $payment->status,
                 'amount'       => $payment->amount,
-                'email'     => $payment->email,
+                'currency'     => $payment->currency,
                 'notes'        => 'Payment updated',
                 'snapshot'     => $payment->toArray(),
             ]);
