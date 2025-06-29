@@ -110,7 +110,7 @@ class memberController extends Controller
         
     // Login 
     public function login(Request $request) {
-        
+        // $credentials = $request->only('email', 'password')
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:8'
@@ -133,6 +133,9 @@ class memberController extends Controller
             'message' => 'Invalid Credentials',
         ], 400);
     }
+
+
+
 
     //    public function index()
     //     {
