@@ -62,7 +62,7 @@ class paymentController extends Controller
         try {
             $payment = new Payment;
             $payment->user_id = auth()->id();
-            $payment->email = auth()->email();
+            $payment->email = $request->email;
             $payment->amount = $request->amount;
             $payment->pledge_amount = $request->pledge_amount;
             $payment->save();

@@ -117,6 +117,7 @@ class memberController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            // $request->session()->regenerate();  // protecting against session fixation.
             $user = Auth::user()->fresh();
             $token = $user->createToken('login-token')->plainTextToken;
 

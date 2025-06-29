@@ -12,17 +12,12 @@ Route::get('/user', function (Request $request) {
 })
 ->middleware('auth:sanctum',);
 
-// Route::middleware(['auth:sanctum'])->get('/admin/total-users', function () {
-//     return response()->json([
-//         'count' => \App\Models\User::count()
-//     ]);
-// });
-
 
 Route::post('/register', [memberController::class, 'register']);
 Route::post('/login', [memberController::class, 'login'])->middleware('guest', 'throttle:3,1'); // 3 attempts per minute
 Route::post('/verify', [memberController::class, 'verify']);
 Route::post('/contact', [memberController::class, 'sendMail']);
+
 
 route::middleware('auth:sanctum')->group(function () {
     Route::post('/payments', [paymentController::class, 'store']);
@@ -31,11 +26,12 @@ route::middleware('auth:sanctum')->group(function () {
 
     
 });
-Route::middleware('auth:sanctum')->get('/payment/history', [PaymentHistoryController::class, 'history']);
-Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
-Auth::guard('web')->logout();
-$request->session()->invalidate();
-$request->session()->regenerateToken();
+Route::middleware('auth:sanctum')->get('/history', [PaymentHistoryController::class, 'history']);
 
-return response()->json(['message' => 'Logged out']);
-});
+// Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
+// Auth::guard('web')->logout();
+// $request->session()->invalidate();
+// $request->session()->regenerateToken();
+
+// return response()->json(['message' => 'Logged out']);
+// });
