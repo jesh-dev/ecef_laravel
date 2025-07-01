@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
          $middleware->append(HandleCors::class);
+          $middleware->alias(['is_admin'], \App\Http\Middleware\IsAdmin::class);
     //       $middleware->group('api', [
     //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
     // ]);
@@ -21,3 +22,5 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
+
+    
