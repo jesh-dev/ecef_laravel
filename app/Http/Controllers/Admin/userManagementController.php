@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class userManagementController extends Controller
@@ -10,6 +11,7 @@ class userManagementController extends Controller
     
 
     // Get only users with role = 'user'
+
 public function allUsers(Request $request)
 {
     $user = $request->user();
@@ -74,4 +76,17 @@ public function allUsers(Request $request)
         $user->delete();
         return response()->json(['message' => 'User deleted successfully']);
     }
+
+public function indexHistory(Request $request)
+{
+    $perPage = $request->input('per_page', 10);
+    $user = $request->user();
+
+    $payments = $user->payments()->with('paymentHistory')->latest()->paginate($perPage);
+
+    return response()->json($payments);
+}
+
+
+
 }

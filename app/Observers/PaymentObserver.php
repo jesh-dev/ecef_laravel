@@ -13,22 +13,11 @@ class PaymentObserver
      */
     public function created(Payment $payment): void
     {
-        //
-        // paymenthistory::create([
-        //     'payment_id' => $payment->id,
-        //     'owner_by' => Auth::id(''), 
-        //     'owner_type' => 'created',
-        //     'amount' => $payment->amount,
-        //     'email' => $payment->email,
-        //     'note' => 'payment created',
-        //     'snapshot' => $payment->toArray(),
-        // ]);
-         PaymentHistory::create([
+         paymenthistory::create([
             'payment_id' => $payment->id,
             'owner_by' => Auth::id(''),
             'email' => $payment->email,
             'amount' => $payment->amount,
-            'pledge_amount' => $payment->pledge_amount,
             'notes' => 'Payment created',
             'snapshot' => json_encode($payment->toArray()),
         ]);

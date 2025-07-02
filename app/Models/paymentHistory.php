@@ -17,7 +17,6 @@ class paymenthistory extends Model
         'owner_by',
         'amount',
         'email',
-        'pledge_amount',
         'timestamp',
         'notes',
         'snapshot',
@@ -33,11 +32,11 @@ class paymenthistory extends Model
     // // Sharing relationship with payment snd User.
     public function payment()
     {
-        return $this->belongsTo(payment::class);
+        return $this->belongsTo(\App\Models\Payment::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'owner_by');
+        return $this->belongsTo(\App\Models\User::class, 'owner_by');
     }
 }

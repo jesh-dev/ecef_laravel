@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->nullable();
             $table->string('email')->nullable();
             $table->decimal('amount', 10, 2);
-            $table->decimal('pledge_amount');
+        
             $table->timestamps();
 
             $table->index('user_id');

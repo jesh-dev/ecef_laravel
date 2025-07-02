@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class payment extends Model
+class Payment extends Model
 {
     use HasFactory;
     //  
@@ -13,7 +13,6 @@ class payment extends Model
         'user_id',
         "email",
         'amount',
-        'pledge_amount',
     ] ;
 
 
@@ -21,14 +20,14 @@ class payment extends Model
        * sharing relationships with user and history.
        */
 
-       public function user()
+       public function users()
        {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\Models\User::class);
        }
 
        public function paymentHistory()
        {
-        return $this->hasMany(paymentHistory::class);
+        return $this->hasMany(\App\Models\PaymentHistory::class);
        }
 
     

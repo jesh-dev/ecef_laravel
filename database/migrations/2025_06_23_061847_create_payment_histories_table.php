@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('owner_by')->nullable()->constrained('users', 'id')->nullOnDelete();
             $table->string('email')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
-            $table->decimal('pledge_amount', 10, 2)->nullable();
             $table->timestamp('timestamp')->useCurrent();
             $table->text('notes')->nullable();
             $table->json('snapshot')->nullable();
