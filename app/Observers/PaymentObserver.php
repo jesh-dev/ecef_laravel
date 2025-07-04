@@ -15,7 +15,7 @@ class PaymentObserver
     {
          paymenthistory::create([
             'payment_id' => $payment->id,
-            'owner_by' => Auth::id(''),
+            'user_id' => Auth::id(),
             'email' => $payment->email,
             'amount' => $payment->amount,
             'notes' => 'Payment created',
@@ -30,14 +30,11 @@ class PaymentObserver
     public function updated(Payment $payment): void
     {
         //
-         if ($payment->isDirty(['status', 'amount', 'currency'])) {
+         if ($payment->isDirty([ 'amount', ])) {
             PaymentHistory::create([
                 'payment_id'   => $payment->id,
-                'owner_by'   => Auth::id(),
-                'owner_type'  => 'updated',
-                'new_status'   => $payment->status,
+                'user_id'      => Auth::id(),
                 'amount'       => $payment->amount,
-                'currency'     => $payment->currency,
                 'notes'        => 'Payment updated',
                 'snapshot'     => $payment->toArray(),
             ]);

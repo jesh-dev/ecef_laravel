@@ -15,14 +15,7 @@ class paymentController extends Controller
     /*
     *Getting all Paginated payment for authenticated user with the name index.
     */
-//     public function index()
-// {
-//     $user = auth()->user();
 
-//     $payments = $user->payments()->with('paymentHistory')->latest()->paginate(10);
-
-//     return response()->json($payments);
-// }
 public function index(Request $request)
 {
     $user = auth()->user();
@@ -30,6 +23,15 @@ public function index(Request $request)
 
     $payments = $user->payments()
         ->with('paymentHistory')
+        ->latest()
+        ->paginate($perPage);
+
+    return response()->json($payments);
+}
+public function paymentHistory(Request $request)
+{
+    $perPage = $request->input('per_page', 10); // default per page
+    $payments = Payment::with('user') // eager load user info
         ->latest()
         ->paginate($perPage);
 
@@ -90,5 +92,39 @@ public function index(Request $request)
         ], 500);
     }
 }
+
+    /**
+     * Creating Overview for Payments with 5 recent payments.
+     */
+    public function overview()
+{
+    $user = auth()->user();
+
+    $totalPayments = $user->payments()->count();
+    $totalAmount   = $user->payments()->sum('amount');
+
+    $recent = $user->payments()
+        ->latest()
+        ->take(5)
+        ->with('user:id,firstname,lastname') // Eager load both parts of the name
+        ->get(['id', 'amount', 'user_id'])
+        ->map(function ($payment) {
+            $first = $payment->user->firstname ?? '';
+            $last  = $payment->user->lastname ?? '';
+            $fullName = trim("$first $last") ?: 'Anonymous';
+
+            return [
+                'name'   => $fullName,
+                'amount' => (float) $payment->amount,
+            ];
+        });
+
+    return response()->json([
+        'totalAmount' => (float) $totalAmount,
+        'totalDonors' => $totalPayments,
+        'recent'      => $recent,
+    ]);
+}
+
 
 }

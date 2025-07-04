@@ -20,7 +20,7 @@ class Payment extends Model
        * sharing relationships with user and history.
        */
 
-       public function users()
+       public function user()
        {
         return $this->belongsTo(\App\Models\User::class);
        }

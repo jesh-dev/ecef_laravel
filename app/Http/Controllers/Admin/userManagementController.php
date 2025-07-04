@@ -71,21 +71,30 @@ public function allUsers(Request $request)
     public function destroy($id)
     {
         $user = User::find($id);
-        if (!$user) return response()->json(['message' => 'User not found'], 404);
+        if (!$user) 
+        return response()->json([
+           'message' => 'User not found'
+        ], 404);
 
         $user->delete();
-        return response()->json(['message' => 'User deleted successfully']);
+        return response()->json([
+            'message' => 'User deleted successfully'
+        ]);
     }
 
 public function indexHistory(Request $request)
 {
     $perPage = $request->input('per_page', 10);
-    $user = $request->user();
 
-    $payments = $user->payments()->with('paymentHistory')->latest()->paginate($perPage);
+    $payments = \App\Models\PaymentHistory::with('user')
+                ->latest()
+                ->paginate($perPage);
 
     return response()->json($payments);
 }
+
+
+
 
 
 
